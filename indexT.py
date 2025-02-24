@@ -1,28 +1,45 @@
 import asyncio
 import random
+import os
 from aiogram import Bot, Dispatcher, types
-from aiogram.types import Message
+from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
 from aiogram.filters import Command
 
-TOKEN = "7874655600:AAHGOx9RIoGujY4HDTiTrgUycZK0nNPGe6c"
+
+TOKEN =("7874655600:AAHGOx9RIoGujY4HDTiTrgUycZK0nNPGe6c")
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
+
+keyboard = ReplyKeyboardMarkup(
+    keyboard=[
+        [KeyboardButton(text="/start"), KeyboardButton(text="/help")],
+        [KeyboardButton(text="/play Камень"), KeyboardButton(text="/play Ножницы"), KeyboardButton(text="/play Бумага")]
+    ],
+    resize_keyboard=True
+)
+
 @dp.message(Command("start"))
 async def send_welcome(message: Message):
-    await message.answer("Привет! Я твой Telegram-бот 🤖")
+    await message.answer("Привет! Я твой Telegram-бот 🤖\nВыбери команду ниже:", reply_markup=keyboard)
 
 @dp.message(Command("play"))
 async def play_rps(message: Message):
     options = ['Камень', 'Ножницы', 'Бумага']
-    user_choice = message.get_args().capitalize()
+
+    args = message.text.split()
+    if len(args) < 2:
+        await message.answer("Пожалуйста, введи свой выбор после команды: /play Камень")
+        return
+
+    user_choice = args[1].capitalize()
+
     if user_choice not in options:
-        await message.answer("Пожалуйста, выбери одно из: Камень, Ножницы, Бумага.")
+        await message.answer("Неправильный выбор. Доступные варианты: Камень, Ножницы, Бумага.")
         return
 
     bot_choice = random.choice(options)
-
     if user_choice == bot_choice:
         result = 'Ничья!'
     elif (user_choice == 'Камень' and bot_choice == 'Ножницы') or \
@@ -32,15 +49,17 @@ async def play_rps(message: Message):
     else:
         result = 'Я победил!'
 
-    response = f'Ты выбрал {user_choice}, я выбрал {bot_choice}. {result}'
-    await message.answer(response)
+    await message.answer(f'Ты выбрал {user_choice}, я выбрал {bot_choice}. {result}')
 
 @dp.message(Command("help"))
 async def send_help(message: Message):
-    await message.answer("Я тебе не буду помогать 🤖")
+    await message.answer("Я тебе помогу! Вот доступные команды:\n"
+                         "/start - Запустить бота\n"
+                         "/play [Камень/Ножницы/Бумага] - Сыграть в игру\n"
+                         "/help - Получить помощь")
 
 async def main():
-    print("бот запущен")
+    print("Бот запущен 🚀")
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
