@@ -4,6 +4,7 @@ import os
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
 from aiogram.filters import Command
+from weatherapp import get_weather
 
 
 TOKEN =("7874655600:AAHGOx9RIoGujY4HDTiTrgUycZK0nNPGe6c")
@@ -58,10 +59,17 @@ async def send_help(message: Message):
                          "/play [Камень/Ножницы/Бумага] - Сыграть в игру\n"
                          "/help - Получить помощь")
 
+@dp.message(Command("weather"))
+async def send_weather(message:Message):
+    weather_info = await get_weather()
+    await message.reply(weather_info)
+
+
 async def main():
     print("Бот запущен 🚀")
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
+
 
 if __name__ == "__main__":
     asyncio.run(main())
