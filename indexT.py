@@ -5,9 +5,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
 from aiogram.filters import Command
 from weatherapp import get_weather
-
-
-TOKEN =("7874655600:AAHGOx9RIoGujY4HDTiTrgUycZK0nNPGe6c")
+from api import TOKEN
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
@@ -15,7 +13,7 @@ dp = Dispatcher()
 
 keyboard = ReplyKeyboardMarkup(
     keyboard=[
-        [KeyboardButton(text="/start"), KeyboardButton(text="/help")],
+        [KeyboardButton(text="/start"), KeyboardButton(text="/help"),  KeyboardButton(text="/weather")],
         [KeyboardButton(text="/play Камень"), KeyboardButton(text="/play Ножницы"), KeyboardButton(text="/play Бумага")]
     ],
     resize_keyboard=True
