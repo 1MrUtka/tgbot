@@ -1,7 +1,7 @@
 import aiohttp
+from api import API_KEY
+from api import WEATHER_URL
 
-API_KEY = "41dc09da6aae7e0f82a4665d15f8a901"
-WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather"
 
 async def get_weather():
     params = { 
@@ -9,7 +9,7 @@ async def get_weather():
         "appid": API_KEY,
         "units": "metric",
         "lang": "ru"
-    }   
+    }
     async with aiohttp.ClientSession() as session:
         async with session.get(WEATHER_URL, params=params) as response:
             data = await response.json()  
